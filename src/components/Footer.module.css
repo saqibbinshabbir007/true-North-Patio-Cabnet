@@ -1,0 +1,27 @@
+/* Footer – subtle top accent so it doesn’t feel like a flat block */
+.root {
+  position: relative;
+}
+.root::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 2px;
+  background: hsl(var(--primary));
+  opacity: 0.9;
+}
+
+.root > div:first-of-type {
+  padding-top: 5rem;
+  padding-bottom: 5rem;
+}
+
+@media (min-width: 768px) {
+  .root > div:first-of-type {
+    padding-top: 5.5rem;
+    padding-bottom: 5.5rem;
+  }
+}

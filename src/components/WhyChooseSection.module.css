@@ -1,0 +1,258 @@
+/* Why Choose True North - section */
+.section {
+  background: #0e1410;
+  padding: 48px 24px 64px;
+  font-family: Georgia, serif;
+}
+
+@media (min-width: 640px) {
+  .section {
+    padding: 64px 32px 80px;
+  }
+}
+
+@media (min-width: 768px) {
+  .section {
+    padding: 72px 40px 88px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .section {
+    padding: 88px 48px 100px;
+  }
+}
+
+.inner {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.headingWrap {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+@media (min-width: 640px) {
+  .headingWrap {
+    margin-bottom: 48px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .headingWrap {
+    margin-bottom: 64px;
+  }
+}
+
+.heading {
+  color: #e8dcc8;
+  font-size: clamp(22px, 4vw, 36px);
+  font-weight: 400;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  line-height: 1.5;
+  margin: 0;
+  display: inline-block;
+}
+
+.headingAccent {
+  color: #c5a868;
+  font-weight: 500;
+}
+
+.headingLine {
+  width: 48px;
+  height: 2px;
+  background: #c5a868;
+  margin: 20px auto 0;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+}
+
+@media (min-width: 640px) {
+  .grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 24px;
+  }
+}
+
+/* Card */
+.card {
+  position: relative;
+  padding: 40px 24px;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 52px 36px;
+  }
+}
+
+@media (min-width: 768px) {
+  .card {
+    padding: 60px 44px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    padding: 72px 52px;
+  }
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.025);
+  border-top: 1px solid rgba(197, 168, 104, 0.3);
+  text-align: center;
+  overflow: hidden;
+  cursor: default;
+}
+
+@media (min-width: 1024px) {
+  .card:not(:nth-child(3n)) {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .card:not(:nth-child(2n)) {
+    border-right: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+@media (max-width: 639px) {
+  .card:not(:last-child) {
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  }
+}
+
+/* Top border — grows from center horizontally */
+.card::before,
+.card::after {
+  content: '';
+  position: absolute;
+  background: #c5a868;
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.card::before {
+  top: 0;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  transform: translateX(-50%);
+}
+
+.card:hover::before {
+  width: 100%;
+}
+
+/* Bottom border — grows from center horizontally */
+.card::after {
+  bottom: 0;
+  left: 50%;
+  width: 0;
+  height: 1px;
+  transform: translateX(-50%);
+}
+
+.card:hover::after {
+  width: 100%;
+}
+
+/* Left border — grows from center vertically */
+.lineLeft,
+.lineRight {
+  position: absolute;
+  background: #c5a868;
+  transition: all 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.lineLeft {
+  left: 0;
+  top: 50%;
+  width: 1px;
+  height: 0;
+  transform: translateY(-50%);
+}
+
+.card:hover .lineLeft {
+  height: 100%;
+}
+
+.lineRight {
+  right: 0;
+  top: 50%;
+  width: 1px;
+  height: 0;
+  transform: translateY(-50%);
+}
+
+.card:hover .lineRight {
+  height: 100%;
+}
+
+.card:hover {
+  background: rgba(197, 168, 104, 0.04);
+}
+
+.icon {
+  color: #c5a868;
+  margin-bottom: 36px;
+  opacity: 0.85;
+  transition: color 0.3s ease, transform 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon svg {
+  flex-shrink: 0;
+}
+
+.card:hover .icon {
+  transform: scale(1.15);
+}
+
+.title {
+  color: #f2ebe0;
+  font-size: clamp(17px, 3.5vw, 22px);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  line-height: 1.55;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+@media (min-width: 640px) {
+  .title {
+    margin-bottom: 24px;
+  }
+}
+
+.divider {
+  width: 36px;
+  height: 1px;
+  background: rgba(197, 168, 104, 0.5);
+  margin: 0 auto 24px;
+}
+
+.desc {
+  color: rgba(232, 220, 200, 0.92);
+  font-size: clamp(14px, 2.2vw, 15px);
+  font-weight: 400;
+  line-height: 1.8;
+  letter-spacing: 0.02em;
+}

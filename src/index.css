@@ -1,0 +1,232 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Jost:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 140 18% 6%;
+    --foreground: 28 26% 88%;
+
+    --card: 144 16% 8%;
+    --card-foreground: 28 26% 88%;
+
+    --popover: 144 16% 8%;
+    --popover-foreground: 28 26% 88%;
+
+    --primary: 36 36% 54%;
+    --primary-foreground: 140 18% 6%;
+
+    --secondary: 144 16% 10%;
+    --secondary-foreground: 28 26% 88%;
+
+    --muted: 144 10% 14%;
+    --muted-foreground: 28 12% 62%;
+
+    --accent: 36 36% 54%;
+    --accent-foreground: 140 18% 6%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 144 10% 16%;
+    --input: 144 10% 16%;
+    --ring: 36 36% 54%;
+
+    --radius: 0.25rem;
+
+    --sidebar-background: 140 18% 6%;
+    --sidebar-foreground: 28 26% 88%;
+    --sidebar-primary: 36 36% 54%;
+    --sidebar-primary-foreground: 140 18% 6%;
+    --sidebar-accent: 144 16% 10%;
+    --sidebar-accent-foreground: 28 26% 88%;
+    --sidebar-border: 144 10% 16%;
+    --sidebar-ring: 36 36% 54%;
+
+    --font-heading: 'Cormorant Garamond', serif;
+    --font-body: 'Jost', sans-serif;
+
+    --gold-gradient: linear-gradient(135deg, hsl(36 36% 54%), hsl(42 50% 65%));
+    --dark-gradient: linear-gradient(180deg, hsl(140 18% 6%), hsl(144 16% 8%));
+    --overlay-gradient: linear-gradient(180deg, hsla(140, 18%, 6%, 0.25) 0%, hsla(140, 18%, 6%, 0.5) 50%, hsla(140, 18%, 6%, 0.72) 100%);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: var(--font-body);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: var(--font-heading);
+  }
+}
+
+@layer components {
+  .heading-display {
+    font-family: var(--font-heading);
+    @apply font-light tracking-widest uppercase;
+  }
+
+  .heading-editorial {
+    font-family: var(--font-heading);
+    @apply font-light tracking-wide;
+  }
+
+  /* Less uniform than heading-display — for variety, editorial sections */
+  .heading-section {
+    font-family: var(--font-heading);
+    @apply font-light tracking-[0.12em] uppercase;
+  }
+
+  .text-body {
+    font-family: var(--font-body);
+    @apply font-normal leading-relaxed;
+  }
+
+  .gold-accent {
+    @apply text-primary;
+  }
+
+  .gold-border-top {
+    @apply border-t-2 border-primary;
+  }
+
+  .card-luxury {
+    @apply bg-card border border-border rounded-sm transition-all duration-300;
+  }
+
+  .card-luxury:hover {
+    @apply -translate-y-1.5;
+    border-top-color: hsl(var(--primary));
+    box-shadow: 0 20px 40px -15px hsla(36, 36%, 54%, 0.15);
+  }
+
+  .btn-gold {
+    @apply inline-flex items-center justify-center px-8 py-3 text-sm font-medium tracking-[0.2em] uppercase transition-all duration-300;
+    font-family: var(--font-body);
+    background: var(--gold-gradient);
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-gold:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 28px -4px hsla(36, 36%, 54%, 0.5), 0 0 0 1px hsla(36, 36%, 54%, 0.2);
+  }
+
+  .btn-outline-gold {
+    @apply inline-flex items-center justify-center px-8 py-3 text-sm font-medium tracking-[0.2em] uppercase border border-primary text-primary transition-all duration-300;
+    font-family: var(--font-body);
+    background: transparent;
+  }
+
+  .btn-outline-gold:hover {
+    background: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+    box-shadow: 0 8px 24px -4px hsla(36, 36%, 54%, 0.35);
+  }
+
+  /* Link with animated underline (e.g. Our Story, View All) */
+  .link-hover-underline {
+    @apply relative inline-flex;
+  }
+  .link-hover-underline::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: -2px;
+    width: 100%;
+    height: 1px;
+    background: hsl(var(--primary));
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+  }
+  .link-hover-underline:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .grain-overlay {
+    position: relative;
+  }
+
+  .grain-overlay::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .nav-blur {
+    backdrop-filter: blur(16px) saturate(120%);
+    -webkit-backdrop-filter: blur(16px) saturate(120%);
+    background: hsla(0, 0%, 72%, 0.95);
+  }
+}
+
+@layer utilities {
+  .animate-reveal-up {
+    animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    opacity: 0;
+  }
+
+  .animate-reveal-up-delay-1 {
+    animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.15s forwards;
+    opacity: 0;
+  }
+
+  .animate-reveal-up-delay-2 {
+    animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+    opacity: 0;
+  }
+
+  .animate-reveal-up-delay-3 {
+    animation: revealUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.45s forwards;
+    opacity: 0;
+  }
+}
+
+@keyframes revealUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeInPage {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-fade-in {
+  animation: fadeInPage 0.5s ease-out forwards;
+}
+
+/* Section scroll-into-view fade-in */
+.section-fade-in {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1), transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.section-fade-in.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}

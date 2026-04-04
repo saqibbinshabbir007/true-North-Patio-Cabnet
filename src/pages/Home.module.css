@@ -1,0 +1,20 @@
+/* Home page – add component-specific styles here. Design unchanged. */
+.root {
+}
+
+/* Hero: strong text shadow so white text stays readable on any background image */
+.heroContent,
+.heroContent * {
+  text-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.8),
+    0 2px 12px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+/* About section: text card overlapping the image (left-aligned) */
+.cardOverlay {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  padding: 2rem 1.75rem;
+  box-shadow: 0 20px 50px -20px rgba(0, 0, 0, 0.5);
+}
