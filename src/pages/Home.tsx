@@ -4,6 +4,7 @@ import { useInView } from "@/hooks/useInView";
 import heroImage from "@/assets/hero-home.webp";
 import aboutImage from "@/assets/about.webp";
 import { cn } from "@/lib/utils";
+import { isHomeEmailJsConfigured, sendInquiryEmail } from "@/lib/emailjs";
 import styles from "./Home.module.css";
 import WhyChooseSection from "@/components/WhyChooseSection";
 import product1 from "@/assets/product-1.jpg";
@@ -27,12 +28,51 @@ const galleryPreview: string[] = (galleryImagesData as string[]).length > 0
 const Home = () => {
   const navigate = useNavigate();
   const [inquirySubmitted, setInquirySubmitted] = useState(false);
+  const [inquirySubmitting, setInquirySubmitting] = useState(false);
+  const [inquiryError, setInquiryError] = useState<string | null>(null);
   const { ref: whyRef, isInView: whyInView } = useInView();
   const { ref: collectionRef, isInView: collectionInView } = useInView();
 
-  const handleInquirySubmit = (e: FormEvent) => {
+  const handleInquirySubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setInquirySubmitted(true);
+    setInquiryError(null);
+    const form = e.currentTarget;
+    const fd = new FormData(form);
+    const name = String(fd.get("name") ?? "").trim();
+    const email = String(fd.get("email") ?? "").trim();
+    const phone = String(fd.get("phone") ?? "").trim();
+    const message = String(fd.get("message") ?? "").trim();
+
+    if (!name || !email || !phone || !message) {
+      setInquiryError("Please fill in every field: Name, Email, Phone, and Message.");
+      return;
+    }
+
+    if (!isHomeEmailJsConfigured()) {
+      setInquiryError(
+        "Email delivery is not configured yet. Please use phone, WhatsApp, or email on the Contact page."
+      );
+      return;
+    }
+
+    setInquirySubmitting(true);
+    try {
+      await sendInquiryEmail({
+        name,
+        email,
+        phone,
+        message,
+        formSource: "Home — Request a Quote",
+      });
+      form.reset();
+      setInquirySubmitted(true);
+    } catch (err) {
+      setInquiryError(
+        err instanceof Error ? err.message : "Could not send. Please try again or contact us directly."
+      );
+    } finally {
+      setInquirySubmitting(false);
+    }
   };
 
   return (
@@ -292,14 +332,24 @@ const Home = () => {
             </div>
           ) : (
             <form onSubmit={handleInquirySubmit} className="flex flex-col gap-5">
+              {inquiryError && (
+                <p className="text-body text-sm text-destructive border border-destructive/40 bg-destructive/10 px-4 py-3">
+                  {inquiryError}
+                </p>
+              )}
               <div>
                 <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                   Name
+                  <span className="text-destructive ml-0.5" aria-hidden="true">
+                    *
+                  </span>
                 </label>
                 <input
+                  name="name"
                   type="text"
                   required
-                  className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors"
+                  disabled={inquirySubmitting}
+                  className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                   placeholder="Your full name"
                 />
               </div>
@@ -307,21 +357,32 @@ const Home = () => {
                 <div>
                   <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                     Email
+                    <span className="text-destructive ml-0.5" aria-hidden="true">
+                      *
+                    </span>
                   </label>
                   <input
+                    name="email"
                     type="email"
                     required
-                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors"
+                    disabled={inquirySubmitting}
+                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                     placeholder="your@email.com"
                   />
                 </div>
                 <div>
                   <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                     Phone
+                    <span className="text-destructive ml-0.5" aria-hidden="true">
+                      *
+                    </span>
                   </label>
                   <input
+                    name="phone"
                     type="tel"
-                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors"
+                    required
+                    disabled={inquirySubmitting}
+                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                     placeholder="(403) 000-0000"
                   />
                 </div>
@@ -329,16 +390,21 @@ const Home = () => {
               <div>
                 <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                   Message
+                  <span className="text-destructive ml-0.5" aria-hidden="true">
+                    *
+                  </span>
                 </label>
                 <textarea
+                  name="message"
                   required
                   rows={4}
-                  className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors resize-none"
+                  disabled={inquirySubmitting}
+                  className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors resize-none disabled:opacity-60"
                   placeholder="Tell us about your project or which products you're interested in..."
                 />
               </div>
-              <button type="submit" className="btn-gold w-full mt-2">
-                Send Inquiry
+              <button type="submit" className="btn-gold w-full mt-2" disabled={inquirySubmitting}>
+                {inquirySubmitting ? "Sending…" : "Send Inquiry"}
               </button>
             </form>
           )}

@@ -1,14 +1,49 @@
 import { useState, FormEvent } from "react";
 import { Phone, MessageCircle, Mail, MapPin } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { isContactEmailJsConfigured, sendContactEmail } from "@/lib/emailjs";
 import styles from "./Contact.module.css";
 
 const Contact = () => {
   const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setSubmitted(true);
+    setSubmitError(null);
+    const form = e.currentTarget;
+
+    const name = (form.elements.namedItem("name") as HTMLInputElement | null)?.value.trim() ?? "";
+    const email = (form.elements.namedItem("email") as HTMLInputElement | null)?.value.trim() ?? "";
+    const phone = (form.elements.namedItem("phone") as HTMLInputElement | null)?.value.trim() ?? "";
+    const message =
+      (form.elements.namedItem("message") as HTMLTextAreaElement | null)?.value.trim() ?? "";
+
+    if (!name || !email || !phone || !message) {
+      setSubmitError("Please fill in every field: Name, Email, Phone, and Message.");
+      return;
+    }
+
+    if (!isContactEmailJsConfigured()) {
+      setSubmitError(
+        "Email delivery is not configured yet. Please call, WhatsApp, or email us using the details on the right."
+      );
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      await sendContactEmail(form);
+      form.reset();
+      setSubmitted(true);
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error ? err.message : "Could not send. Please try again or contact us directly."
+      );
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
@@ -48,52 +83,78 @@ const Contact = () => {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+              <form id="contact-form" onSubmit={handleSubmit} className="flex flex-col gap-6">
+                {submitError && (
+                  <p className="text-body text-sm text-destructive border border-destructive/40 bg-destructive/10 px-4 py-3">
+                    {submitError}
+                  </p>
+                )}
                 <div>
                   <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                     Name
+                    <span className="text-destructive ml-0.5" aria-hidden="true">
+                      *
+                    </span>
                   </label>
                   <input
+                    name="name"
                     type="text"
                     required
-                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors"
+                    disabled={submitting}
+                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                     placeholder="Your full name"
                   />
                 </div>
                 <div>
                   <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                     Email
+                    <span className="text-destructive ml-0.5" aria-hidden="true">
+                      *
+                    </span>
                   </label>
                   <input
+                    name="email"
                     type="email"
                     required
-                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors"
+                    disabled={submitting}
+                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                     placeholder="your@email.com"
                   />
                 </div>
                 <div>
                   <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                     Phone
+                    <span className="text-destructive ml-0.5" aria-hidden="true">
+                      *
+                    </span>
                   </label>
                   <input
+                    name="phone"
                     type="tel"
-                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors"
+                    required
+                    disabled={submitting}
+                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors disabled:opacity-60"
                     placeholder="(403) 000-0000"
                   />
                 </div>
                 <div>
                   <label className="font-body text-sm font-medium tracking-[0.12em] uppercase text-foreground/90 mb-2 block">
                     Message
+                    <span className="text-destructive ml-0.5" aria-hidden="true">
+                      *
+                    </span>
                   </label>
                   <textarea
+                    name="message"
                     required
                     rows={5}
-                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors resize-none"
+                    disabled={submitting}
+                    className="w-full bg-transparent border border-border px-4 py-3 text-foreground font-body text-sm focus:outline-none focus:border-primary transition-colors resize-none disabled:opacity-60"
                     placeholder="Tell us about your project..."
                   />
                 </div>
-                <button type="submit" className="btn-gold w-full mt-2">
-                  Send Message
+                <button type="submit" className="btn-gold w-full mt-2" disabled={submitting}>
+                  {submitting ? "Sending…" : "Send Message"}
                 </button>
               </form>
             )}
