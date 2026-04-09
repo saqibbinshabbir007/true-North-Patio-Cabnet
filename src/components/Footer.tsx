@@ -67,11 +67,11 @@ const Footer = () => {
                 +1 403-390-1244
               </a>
               <a
-                href="mailto:info@truenorthpatiocabinet.com"
+                href="mailto:support@truenorthpatiocabinet.com"
                 className="flex items-center gap-3 font-body text-sm text-foreground/90 hover:text-primary transition-colors duration-300 break-all"
               >
                 <Mail className="h-4 w-4 shrink-0 text-primary" aria-hidden />
-                info@truenorthpatiocabinet.com
+                support@truenorthpatiocabinet.com
               </a>
               <p className="flex items-center gap-3 font-body text-sm text-foreground/90">
                 <MapPin className="h-4 w-4 shrink-0 text-primary" aria-hidden />

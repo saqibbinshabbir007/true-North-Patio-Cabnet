@@ -171,7 +171,7 @@ const Contact = () => {
                 {[
                   { label: "Phone", value: "+1 587-436-2167", href: "tel:+15874362167", icon: Phone },
                   { label: "WhatsApp", value: "+1 403-390-1244", href: "https://wa.me/14033901244", icon: MessageCircle },
-                  { label: "Email", value: "info@truenorthpatiocabinet.com", href: "mailto:info@truenorthpatiocabinet.com", icon: Mail },
+                  { label: "Email", value: "support@truenorthpatiocabinet.com", href: "mailto:support@truenorthpatiocabinet.com", icon: Mail },
                 ].map((c) => {
                   const Icon = c.icon;
                   return (
