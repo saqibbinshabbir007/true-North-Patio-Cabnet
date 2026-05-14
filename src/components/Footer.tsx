@@ -88,6 +88,14 @@ const Footer = () => {
           <p className="font-body text-xs sm:text-sm text-foreground/90 text-center md:text-left">
             © {new Date().getFullYear()} True North Patio Cabinet. All rights reserved.
           </p>
+          <a
+            href="https://www.webdevelopersinc.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="font-body text-xs sm:text-sm text-foreground/90 hover:text-primary transition-colors duration-300 text-center"
+          >
+            Powered by Web Developer Inc
+          </a>
           <p className="font-body text-xs sm:text-sm text-foreground/90 text-center md:text-right">
             Alberta, Canada
           </p>
